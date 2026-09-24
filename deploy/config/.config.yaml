@@ -6,6 +6,6 @@ server:
 
 manager-api:
   url: http://xiaozhi-esp32-server-web:8002/xiaozhi
-  secret: b965c4f6-de09-45a5-8c43-cfbb0a312bd1
+  secret: ""  # 部署后从智控台【参数管理】复制 server.secret 填入
 
 prompt_template: agent-base-prompt.txt
