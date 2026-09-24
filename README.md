@@ -1,0 +1,3 @@
+# frido
+
+Frido project.
