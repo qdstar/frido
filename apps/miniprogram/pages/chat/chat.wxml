@@ -1,0 +1,9 @@
+<view class="chat">
+  <scroll-view scroll-y class="messages">
+    <view wx:for="{{messages}}" wx:key="index" class="msg {{item.role}}">{{item.text}}</view>
+  </scroll-view>
+  <view class="input-bar">
+    <input value="{{input}}" bindinput="onInput" placeholder="问 Frido：今晚做什么菜？" />
+    <button size="mini" type="primary" bindtap="send">发送</button>
+  </view>
+</view>

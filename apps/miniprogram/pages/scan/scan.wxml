@@ -1,0 +1,4 @@
+<view class="scan-page">
+  <button type="primary" bindtap="scanImage">拍照识别食材</button>
+  <text class="hint">拍摄冰箱内部照片，AI 将自动识别食材</text>
+</view>

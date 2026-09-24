@@ -1,0 +1,14 @@
+.env
+.env.*
+!.env.example
+__pycache__/
+*.pyc
+node_modules/
+dist/
+.DS_Store
+*.log
+data/
+models/
+uploadfile/
+upstream/xiaozhi-esp32-server/data/
+upstream/xiaozhi-esp32-server/models/

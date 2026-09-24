@@ -1,0 +1,25 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/inventory/inventory",
+    "pages/scan/scan",
+    "pages/chat/chat"
+  ],
+  "window": {
+    "navigationBarTitleText": "Frido 智能冰箱",
+    "navigationBarBackgroundColor": "#1a73e8",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f5f7fa"
+  },
+  "tabBar": {
+    "color": "#666",
+    "selectedColor": "#1a73e8",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "首页", "iconPath": "assets/home.png", "selectedIconPath": "assets/home-active.png" },
+      { "pagePath": "pages/inventory/inventory", "text": "库存", "iconPath": "assets/inventory.png", "selectedIconPath": "assets/inventory-active.png" },
+      { "pagePath": "pages/scan/scan", "text": "识物", "iconPath": "assets/scan.png", "selectedIconPath": "assets/scan-active.png" },
+      { "pagePath": "pages/chat/chat", "text": "助手", "iconPath": "assets/chat.png", "selectedIconPath": "assets/chat-active.png" }
+    ]
+  },
+  "sitemapLocation": "sitemap.json"
+}

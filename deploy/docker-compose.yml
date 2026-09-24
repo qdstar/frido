@@ -1,0 +1,81 @@
+# Frido 全栈部署：xiaozhi 后端 + Frido 业务 API
+# 用法: cd deploy && docker compose up -d
+
+services:
+  # ===== xiaozhi 全模块（来自 upstream） =====
+  xiaozhi-esp32-server-db:
+    image: mysql:latest
+    container_name: xiaozhi-esp32-server-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-frido_mysql_2026}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-xiaozhi_esp32_server}
+      TZ: Asia/Shanghai
+    volumes:
+      - xiaozhi-mysql:/var/lib/mysql
+    networks: [frido-net]
+
+  xiaozhi-esp32-server-redis:
+    image: redis:8.0
+    container_name: xiaozhi-esp32-server-redis
+    restart: unless-stopped
+    networks: [frido-net]
+
+  xiaozhi-esp32-server-web:
+    image: ghcr.nju.edu.cn/xinnan-tech/xiaozhi-esp32-server:web_latest
+    container_name: xiaozhi-esp32-server-web
+    restart: unless-stopped
+    depends_on: [xiaozhi-esp32-server-db, xiaozhi-esp32-server-redis]
+    environment:
+      TZ: Asia/Shanghai
+      SPRING_DATASOURCE_DRUID_USERNAME: root
+      SPRING_DATASOURCE_DRUID_PASSWORD: ${MYSQL_ROOT_PASSWORD:-frido_mysql_2026}
+      SPRING_DATASOURCE_DRUID_URL: jdbc:mysql://xiaozhi-esp32-server-db:3306/${MYSQL_DATABASE:-xiaozhi_esp32_server}?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+      SPRING_DATA_REDIS_HOST: xiaozhi-esp32-server-redis
+      SPRING_DATA_REDIS_PORT: 6379
+    ports:
+      - "8002:8002"
+    networks: [frido-net]
+
+  xiaozhi-esp32-server:
+    image: ghcr.nju.edu.cn/xinnan-tech/xiaozhi-esp32-server:server_latest
+    container_name: xiaozhi-esp32-server
+    restart: unless-stopped
+    depends_on: [xiaozhi-esp32-server-web]
+    volumes:
+      - xiaozhi-data:/opt/xiaozhi-esp32-server/data
+      - xiaozhi-models:/opt/xiaozhi-esp32-server/models
+      - ./config/.config.yaml:/opt/xiaozhi-esp32-server/data/.config.yaml:ro
+    ports:
+      - "8000:8000"
+      - "8003:8003"
+    environment:
+      TZ: Asia/Shanghai
+    networks: [frido-net]
+
+  # ===== Frido 业务层 =====
+  frido-fridge-api:
+    build: ../services/fridge-api
+    container_name: frido-fridge-api
+    restart: unless-stopped
+    depends_on: [xiaozhi-esp32-server]
+    environment:
+      FRIDGE_DB_PATH: /data/fridge.db
+      VISION_EXPLAIN_URL: http://xiaozhi-esp32-server:8003/mcp/vision/explain
+      VISION_TOKEN: ${VISION_TOKEN:-}
+      FRIDO_DEVICE_ID: ${FRIDO_DEVICE_ID:-frido-fridge-001}
+    volumes:
+      - frido-data:/data
+    ports:
+      - "8010:8010"
+    networks: [frido-net]
+
+networks:
+  frido-net:
+    driver: bridge
+
+volumes:
+  xiaozhi-mysql:
+  xiaozhi-data:
+  xiaozhi-models:
+  frido-data:

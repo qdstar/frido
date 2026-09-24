@@ -1,0 +1,14 @@
+<view class="container">
+  <view class="hero">
+    <text class="title">Frido 智能冰箱</text>
+    <text class="subtitle">库存 {{inventoryCount}} 项</text>
+  </view>
+  <view class="card" wx:if="{{decision}}">
+    <text class="card-title">智能建议</text>
+    <text>{{decision.reason}}</text>
+  </view>
+  <view class="card" wx:if="{{expiring.length}}">
+    <text class="card-title">即将过期</text>
+    <view wx:for="{{expiring}}" wx:key="id">{{item.name}} - {{item.expiry_date}}</view>
+  </view>
+</view>
